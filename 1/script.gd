@@ -1,14 +1,17 @@
-# COmmand to run the script fast and easy
-# godot --headless -s --quit
-
 extends Node
 
-# class member variables go here, for example:
-# var a = 2
-# var b = "textvar"
-
 func _ready():
-    # Called every time the node is added to the scene.
-    # Initialization here
     print_debug('hello')
+    run("res://input.txt")
     pass
+
+func run(path: String) -> int:
+  var file = FileAccess.open(path, FileAccess.READ)
+  assert(file, "Failed to read file")
+
+  var line: String = file.get_line()
+	
+  while line:
+    print_debug(line)
+
+  return 0
