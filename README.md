@@ -1,10 +1,9 @@
-# Advent of code 2024 with nvim and godot
+# Advent of code 2024 with nvim and lua
 
 https://adventofcode.com/2024
 
 ## How to run
 
-- Go to the day of the event example `cd /1/`
-- Run the command `godot --headless -s --quit`
+- Run the command `lua ./1/script.lua`
 
-That is it!
+That's it!
