@@ -29,10 +29,34 @@ function CalcTheDiff()
 	print(total)
 end
 
+function CalcTheSimilarity()
+	for arrayLeftKey, arrayLeftItem in ipairs(arrayLeft) do
+		local similarityNumber = 0
+		for arrayRightKey, arrayRightItem in ipairs(arrayRight) do
+			if arrayLeftItem == arrayRightItem then
+				similarityNumber = similarityNumber + 1
+			end
+		end
+
+		total = total + (arrayLeftItem * similarityNumber)
+	end
+
+	print(total)
+end
+
+function Part1()
+	SortTables()
+	CalcTheDiff()
+end
+
+function Part2()
+	CalcTheSimilarity()
+end
+
 -- WHERE IT START
 if input then
 	ReadLinesAndSplitInTwoTable(input)
 	input:close()
-	SortTables()
-	CalcTheDiff()
+	-- Part1()
+	Part2()
 end
