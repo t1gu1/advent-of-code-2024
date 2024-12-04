@@ -21,8 +21,6 @@ end
 
 function CalcTheDiff()
 	for k, v in ipairs(arrayLeft) do
-		-- print(k, v, arrayRight[k])
-		-- print(math.abs(v - arrayRight[k]))
 		total = total + math.abs(v - arrayRight[k])
 	end
 
@@ -30,9 +28,9 @@ function CalcTheDiff()
 end
 
 function CalcTheSimilarity()
-	for arrayLeftKey, arrayLeftItem in ipairs(arrayLeft) do
+	for _, arrayLeftItem in ipairs(arrayLeft) do
 		local similarityNumber = 0
-		for arrayRightKey, arrayRightItem in ipairs(arrayRight) do
+		for _, arrayRightItem in ipairs(arrayRight) do
 			if arrayLeftItem == arrayRightItem then
 				similarityNumber = similarityNumber + 1
 			end
