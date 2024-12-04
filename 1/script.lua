@@ -4,8 +4,8 @@ local arrayLeft = {}
 local arrayRight = {}
 local total = 0
 
-function ReadLinesAndSplitInTwoTable(a)
-	for line in a:lines() do
+function ReadLinesAndSplitInTwoTable(input)
+	for line in input:lines() do
 		local left = line:sub(0, 5)
 		local right = line:sub(9, 13)
 
