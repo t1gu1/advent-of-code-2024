@@ -12,7 +12,7 @@ end
 -- Rules --
 -- The levels are either all increasing or all decreasing.
 function IsIncreasing(a, b)
-	return a < b
+	return tonumber(a) < tonumber(b)
 end
 -- Any two adjacent levels differ by at least one and at most three.
 function IsDifferenceIsOneToThreeBetween(a, b)
@@ -36,11 +36,13 @@ function Part1(line)
 			end
 
 			if isIncreasing == nil then
-				-- PrintOnlyFiveFirstLines("IsIncreasingInfo")
 				isIncreasing = IsIncreasing(previousLocation, location)
 			else
 				if IsIncreasing(previousLocation, location) ~= isIncreasing then
 					isItSafe = false
+					-- PrintOnlyFiveFirstLines(
+					-- 	"notSafe when location is " .. location .. " and previous is " .. previousLocation
+					-- )
 				end
 			end
 		end
@@ -58,6 +60,8 @@ if input then
 	for line in input:lines() do
 		if Part1(line) then
 			countSafe = countSafe + 1
+		else
+			-- print("Not Safe: " .. line)
 		end
 
 		-- If you want to stop the print after a number of iterations
