@@ -26,5 +26,3 @@ if input then
 
 	print("additionnedMultiplication: " .. additionnedMultiplication)
 end
-
--- Last try = 167714236
