@@ -10,7 +10,15 @@ function Part1(line)
 	return additionnedMultiplication
 end
 
-function Part2(line) end
+-- Clean up the input by removing what's between every "don't()" and a "do()"
+-- Clean up the input by removing what's after a "don't()" at the end if no do() follow
+function Part2(text)
+	local cleanInput = text
+	cleanInput = cleanInput:gsub("don't%(%).-do%(%)", "")
+	cleanInput = cleanInput:gsub("don't%(%).*", "")
+	print(cleanInput)
+	return Part1(cleanInput)
+end
 
 -- WHERE IT START
 if input then
@@ -20,5 +28,6 @@ if input then
 	end
 	input:close()
 
-	print("additionnedMultiplication: " .. Part1(accLines))
+	print("additionnedMultiplication part 1: " .. Part1(accLines))
+	print("additionnedMultiplication part 2: " .. Part2(accLines))
 end
