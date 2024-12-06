@@ -16,7 +16,6 @@ function Part2(text)
 	local cleanInput = text
 	cleanInput = cleanInput:gsub("don't%(%).-do%(%)", "")
 	cleanInput = cleanInput:gsub("don't%(%).*", "")
-	print(cleanInput)
 	return Part1(cleanInput)
 end
 
