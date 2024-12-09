@@ -24,7 +24,12 @@ function CreateUpdatesTable(line)
 end
 
 function FindMiddleNumber(tableToCheck)
-	return tableToCheck[math.ceil(#tableToCheck / 2)]
+	local updateTable = {}
+	for n in tableToCheck:gmatch("%d+") do
+		table.insert(updateTable, n)
+	end
+
+	return updateTable[math.ceil(#updateTable / 2)]
 end
 
 function Part1()
@@ -47,12 +52,7 @@ function Part1()
 
 		-- Calculate the middle number
 		if isUpdatePass then
-			local updateTable = {}
-			for n in update:gmatch("%d+") do
-				table.insert(updateTable, n)
-			end
-
-			part1ResponseAcc = part1ResponseAcc + FindMiddleNumber(updateTable)
+			part1ResponseAcc = part1ResponseAcc + FindMiddleNumber(update)
 		else
 			table.insert(failUpdatesTable, update)
 		end
@@ -65,7 +65,6 @@ function SwitchNumber(update, valA, valB)
 	local a1, a2 = update:find(valA)
 	local b1, b2 = update:find(valB)
 	local firstEdit = update:sub(1, a1 - 1) .. valB .. update:sub(a2 + 1, -1)
-
 	return firstEdit:sub(1, b1 - 1) .. valA .. firstEdit:sub(b2 + 1, -1)
 end
 
@@ -90,12 +89,7 @@ function Part2(updatesTableToRun)
 		end
 
 		if isUpdatePass then
-			local updateTable = {}
-			for n in update:gmatch("%d+") do
-				table.insert(updateTable, n)
-			end
-
-			part2ResponseAcc = part2ResponseAcc + FindMiddleNumber(updateTable)
+			part2ResponseAcc = part2ResponseAcc + FindMiddleNumber(update)
 		end
 	end
 
