@@ -8,6 +8,18 @@ local mapInitial = {}
 local guardInitial = { x = 1, y = 1 }
 local guardMovementInitial = { x = 0, y = -1 }
 
+function Sleep(a)
+	local sec = tonumber(os.clock() + a)
+	while os.clock() < sec do
+	end
+end
+
+function Wait(t)
+	local start = os.time()
+	repeat
+	until os.time() > start + t
+end
+
 -- Util to copy table
 function Copy(obj, seen)
 	if type(obj) ~= "table" then
@@ -46,12 +58,10 @@ function PrintStartingInfo()
 end
 
 function TurnGuardToHerRight(movement)
-	print("guard turn")
 	-- WHEN GOING UP, TURH TO THE RIGHT
 	if movement.x == 0 and movement.y == -1 then
 		movement.x = 1
 		movement.y = 0
-		print("guard face right")
 		return
 	end
 
@@ -59,7 +69,6 @@ function TurnGuardToHerRight(movement)
 	if movement.x == 1 and movement.y == 0 then
 		movement.x = 0
 		movement.y = 1
-		print("guard face down")
 		return
 	end
 
@@ -67,7 +76,6 @@ function TurnGuardToHerRight(movement)
 	if movement.x == 0 and movement.y == 1 then
 		movement.x = -1
 		movement.y = 0
-		print("guard face left")
 		return
 	end
 
@@ -75,7 +83,6 @@ function TurnGuardToHerRight(movement)
 	if movement.x == -1 and movement.y == 0 then
 		movement.x = 0
 		movement.y = -1
-		print("guard face up")
 		return
 	end
 end
@@ -98,18 +105,23 @@ function Part1()
 		map[guard.y][guard.x] = "X"
 
 		if map[guard.y + guardMovement.y][guard.x + guardMovement.x] ~= "#" then
-			print("Move foward")
 			guard.x = guard.x + guardMovement.x
 			guard.y = guard.y + guardMovement.y
 		else
 			TurnGuardToHerRight(guardMovement)
 		end
+
+		map[guard.y][guard.x] = "8"
+		PrintTheMap(map)
+		os.execute("clear")
 	end
 
 	mapWhereGuardCanMove = Copy(map) -- Keep this information to use in Part2
 	map[guard.y][guard.x] = "8"
-	PrintTheMap(map)
-	print("Total number of X is: " .. CountAllX())
+
+	-- PrintTheMap(map)
+
+	-- print("Total number of X is: " .. CountAllX())
 end
 
 -- Reset the map, guard position and guard movement
@@ -157,5 +169,5 @@ if input then
 	guardInitial = Copy(guard)
 
 	Part1()
-	Part2()
+	-- Part2()
 end
