@@ -1,12 +1,15 @@
 local input = io.open("input.txt", "r")
 local map = {}
-local mapWhereGuardCanMove = {} -- Where all the X are marked after Part 1 Done
+local coordinatesWhereGuardCanBeBlock = {} -- Where all the X are marked after Part 1 Done
+local testCoordinatesIteration = 1
 local guard = { x = 1, y = 1 }
 local guardMovement = { x = 0, y = -1 }
 
 local mapInitial = {}
 local guardInitial = { x = 1, y = 1 }
 local guardMovementInitial = { x = 0, y = -1 }
+
+local countNbOfTimeGuardCanBeBlock = 0
 
 -- Util to copy table
 function Copy(obj, seen)
@@ -46,12 +49,10 @@ function PrintStartingInfo()
 end
 
 function TurnGuardToHerRight(movement)
-	print("guard turn")
 	-- WHEN GOING UP, TURH TO THE RIGHT
 	if movement.x == 0 and movement.y == -1 then
 		movement.x = 1
 		movement.y = 0
-		print("guard face right")
 		return
 	end
 
@@ -59,7 +60,6 @@ function TurnGuardToHerRight(movement)
 	if movement.x == 1 and movement.y == 0 then
 		movement.x = 0
 		movement.y = 1
-		print("guard face down")
 		return
 	end
 
@@ -67,7 +67,6 @@ function TurnGuardToHerRight(movement)
 	if movement.x == 0 and movement.y == 1 then
 		movement.x = -1
 		movement.y = 0
-		print("guard face left")
 		return
 	end
 
@@ -75,7 +74,6 @@ function TurnGuardToHerRight(movement)
 	if movement.x == -1 and movement.y == 0 then
 		movement.x = 0
 		movement.y = -1
-		print("guard face up")
 		return
 	end
 end
@@ -86,6 +84,7 @@ function CountAllX()
 		for x = 1, #map[y] do
 			if map[y][x] == "X" or map[y][x] == "8" then
 				count = count + 1
+				table.insert(coordinatesWhereGuardCanBeBlock, { x = x, y = y })
 			end
 		end
 	end
@@ -93,20 +92,22 @@ function CountAllX()
 end
 
 function Part1()
+	local tes = 1
+
 	while guard.x < #map[1] and guard.y < #map and guard.x > 1 and guard.y > 1 do
 		-- Mark the current position as visited
 		map[guard.y][guard.x] = "X"
 
 		if map[guard.y + guardMovement.y][guard.x + guardMovement.x] ~= "#" then
-			print("Move foward")
 			guard.x = guard.x + guardMovement.x
 			guard.y = guard.y + guardMovement.y
 		else
 			TurnGuardToHerRight(guardMovement)
 		end
+
+		tes = tes + 1
 	end
 
-	mapWhereGuardCanMove = Copy(map) -- Keep this information to use in Part2
 	map[guard.y][guard.x] = "8"
 	PrintTheMap(map)
 	print("Total number of X is: " .. CountAllX())
@@ -120,21 +121,56 @@ function Reset()
 end
 
 function Part2()
-	print("")
-	print("--------------------")
-	print("Part 2 start HERE")
-
 	Reset()
+	local mapSize = #map[1]
 
+	-- Add an obstacle
+	map[coordinatesWhereGuardCanBeBlock[testCoordinatesIteration].y][coordinatesWhereGuardCanBeBlock[testCoordinatesIteration].x] =
+		"!"
+
+	local consecutiveTimeRepassOnOldPath = 0
 	-- Loop through the mapWhereGuardCanMove to replace all the X one by one with an obstable
 	-- Try each iteration to see if the guard can reach the end and is stuck in a loop
 	-- Count all the position when the guard is stuck in a loop
 	-- Guard is stuck in a loop when she go back to a position she already visited for repeated time of #map + #map[1]
+	while
+		(guard.x < mapSize and guard.y < #map and guard.x > 1 and guard.y > 1)
+		and consecutiveTimeRepassOnOldPath < mapSize * 2
+	do
+		if map[guard.y][guard.x] == "X" then
+			consecutiveTimeRepassOnOldPath = consecutiveTimeRepassOnOldPath + 1
+		else
+			consecutiveTimeRepassOnOldPath = 0
+		end
 
-	PrintTheMap(map)
+		-- Mark the current position as visited
+		map[guard.y][guard.x] = "X"
+
+		if
+			map[guard.y + guardMovement.y][guard.x + guardMovement.x] ~= "#"
+			and map[guard.y + guardMovement.y][guard.x + guardMovement.x] ~= "!"
+		then
+			guard.x = guard.x + guardMovement.x
+			guard.y = guard.y + guardMovement.y
+		else
+			TurnGuardToHerRight(guardMovement)
+		end
+	end
+
+	map[guard.y][guard.x] = "8"
+
+	if consecutiveTimeRepassOnOldPath >= mapSize * 2 then
+		countNbOfTimeGuardCanBeBlock = countNbOfTimeGuardCanBeBlock + 1
+	end
+
+	testCoordinatesIteration = testCoordinatesIteration + 1
+
+	if testCoordinatesIteration <= #coordinatesWhereGuardCanBeBlock then
+		Part2()
+	else
+		print("Total number of time guard can be block is: " .. countNbOfTimeGuardCanBeBlock)
+	end
 end
-
--- function Part2(line) end
 
 -- WHERE IT START
 if input then
@@ -157,5 +193,8 @@ if input then
 	guardInitial = Copy(guard)
 
 	Part1()
-	Part2()
+	print("")
+	print("--------------------")
+	print("Part 2 start HERE")
+	Part2() -- Part1 is required to be done before Part2
 end
